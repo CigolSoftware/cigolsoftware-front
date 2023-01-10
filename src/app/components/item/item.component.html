@@ -1,0 +1,16 @@
+<div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
+    <div class="col px-2 py-1 position-static">
+        <div class="d-flex align-items-center">
+            <app-button *ngIf="errorMessage; else b" [properties]="errorButton" class="me-1"></app-button>
+            <ng-template #b>
+                <app-button (click)="emitter.emit()" [properties]="button" class="me-1"></app-button>
+            </ng-template>
+            <div class="flex-1">
+                <ng-content></ng-content>
+                <div class="fs--2 fw-semi-bold">
+                    <div class="text-danger">{{errorMessage}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
