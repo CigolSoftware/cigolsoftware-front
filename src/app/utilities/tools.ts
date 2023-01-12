@@ -1,4 +1,15 @@
 import { Subject, timer } from "rxjs";
+import { Project } from "./data";
+import { Toast } from "./dto";
+
+export class Constants {
+
+    public static EMPTY_NAME = 'El nombre no puede estar vacío.';
+    public static NETWORK_ERROR = 'No logramos conectarnos con el servidor, revisa tu conexión o intentalo más tarde.';
+    public static PROJECT_EXIST = 'Ya existe un proyecto con este nombre.';
+
+    public static proyectSaved(project: Project) { return "Proyecto '" + project.name + "' creado correctamente" };
+}
 
 export class Utilities {
 
@@ -8,7 +19,7 @@ export class Utilities {
     private static TIME = 0;
     private static WAITING = 0;
 
-    public static TOAST = new Subject<string>();
+    public static TOAST = new Subject<Toast>();
     public static WAIT = new Subject<boolean>();
 
     private static async next(wait: boolean) {
@@ -25,7 +36,7 @@ export class Utilities {
         }
     }
 
-    public static toast(toast: string) { Utilities.TOAST.next(toast) }
+    public static toast(toast: Toast) { Utilities.TOAST.next(toast) }
     public static async wait(wait: boolean) {
         if (wait) {
             Utilities.WAITING++;

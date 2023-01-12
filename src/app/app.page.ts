@@ -1,8 +1,10 @@
 import { ButtonProperties } from './components/button/button.component';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Color, Icon, Toast } from './utilities/dto';
+import { Constants, Utilities } from './utilities/tools';
 import { NgForm, NgModel } from '@angular/forms';
 import { Platform } from "@angular/cdk/platform";
-import { Utilities } from './utilities/tools';
+import { ProjectService } from './services/project.service';
 
 @Component({ selector: 'app-root', templateUrl: './app.page.html' })
 export class AppPage {
@@ -19,21 +21,21 @@ export class AppPage {
   @ViewChild("iname")
   set iname(name: ElementRef) { if (name) name.nativeElement.focus() }
 
-  public buttonCheck: ButtonProperties = { color: 'success', icon: 'check' };
-  public buttonDownload: ButtonProperties = { color: 'primary', icon: 'download' };
-  public buttonExclamation: ButtonProperties = { color: 'danger', icon: 'exclamation' };
-  public buttonPlus: ButtonProperties = { color: 'success', icon: 'plus' };
-  
+  public buttonCheck: ButtonProperties = { color: Color.SUCCESS, icon: Icon.CHECK };
+  public buttonDownload: ButtonProperties = { color: Color.PRIMARY, icon: Icon.DOWNLOAD };
+  public buttonExclamation: ButtonProperties = { color: Color.DANGER, icon: Icon.EXCLAMATION };
+  public buttonPlus: ButtonProperties = { color: Color.SUCCESS, icon: Icon.PLUS };
+
   public default: any;
   public form = false;
   public ios = false;
   public installer = false;
-  public message = '';
+  public toastMessage?: Toast;
   public submited = false;
 
-  constructor(private platform: Platform) {
+  constructor(private platform: Platform, private service: ProjectService) {
     Utilities.TOAST.subscribe(t => {
-      this.message = t;
+      this.toastMessage = t;
       this.toast?.nativeElement.click();
     });
     Utilities.WAIT.subscribe(w => (w ? this.loading : this.close)?.nativeElement.click());
@@ -47,12 +49,19 @@ export class AppPage {
 
   public create(project: NgForm) {
     this.submited = true;
-    if (project.valid) this.form = false;
+    if (project.valid) {
+      this.service.save(project.value.name).subscribe(b => {
+        if (b && b.code === 0) {
+          Utilities.toast({ color: Color.SUCCESS, message: Constants.proyectSaved(b.response) });
+          this.form = false;
+        } else if (b && b.code === 1) Utilities.toast({ color: Color.WARNING, message: Constants.PROJECT_EXIST });
+      })
+    }
   }
 
   public hasError(model: NgModel) {
-    if (this.submited && model.errors && model.errors['complete']) return 'El nombre no puede estar vacío.';
-    else if (model.errors && model.errors['uniqueProject']) return 'Ya existe un proyecto con este nombre.';
+    if (this.submited && model.errors && model.errors['complete']) return Constants.EMPTY_NAME;
+    else if (model.errors && model.errors['uniqueProject']) return model.errors['uniqueProject'];
     else return null;
   }
 

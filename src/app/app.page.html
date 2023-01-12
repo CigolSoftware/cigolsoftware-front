@@ -38,7 +38,7 @@
                   <form #project="ngForm" class="pe-3 w-100" (ngSubmit)="create(project)" autocomplete="off">
                     <input #iname #name="ngModel" autofocus="true"
                       class="form-control border-0 rounded-0 outline-none p-0" complete name="name" ngModel
-                      placeholder="Nuevo proyecto..." uniqueProject />
+                      placeholder="Nombre del proyecto..." uniqueProject />
                   </form>
                 </app-item>
               </ng-template>
@@ -52,7 +52,7 @@
             <p class="mb-0 text-600">Cigol Software &copy;</p>
           </div>
           <div class="col-12 col-sm-auto text-center">
-            <p class="mb-0 text-600">v0.0.1</p>
+            <p class="mb-0 text-600">v0.0.2</p>
           </div>
         </div>
       </footer>
@@ -73,6 +73,6 @@
 <a #toast data-bs-toggle="notice" href="#toast" hidden></a>
 <div class="toast hide notice shadow-none bg-transparent" id="toast">
   <div class="toast-body my-3 ms-0 ms-md-5">
-    <div class="alert alert-danger m-0"> {{message}}</div>
+    <div class="alert alert-{{toastMessage?.color}} m-0"> {{toastMessage?.message}}</div>
   </div>
 </div>
