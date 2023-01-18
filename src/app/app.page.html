@@ -40,7 +40,7 @@
         <div class="col-xxl-12 px-xxl-2 mb-4">
           <div class="card h-lg-100 overflow-hidden">
             <div class="card-body p-0">
-              <app-editable-item [button]="plus" (click)="id = 0" (emitter)="filter(projects.length)" [form]="id === 0"
+              <app-editable-item [button]="plus" (click)="id = 0" (emitter)="filter()" [form]="id === 0"
                 placeholder="Nuevo proyecto"></app-editable-item>
             </div>
           </div>
@@ -53,7 +53,7 @@
           <div class="card h-lg-100 overflow-hidden">
             <div class="card-body p-0">
               <app-editable-item *ngFor="let project of projects" (click)="id = project.id"
-                (emitter)="filter(projects.length)" [form]="id === project.id" [id]="project.id"
+                (emitter)="filter(projects.length)" [form]="id === project.id" [project]="project"
                 [initials]="initials(project.name)" [placeholder]="project.name"
                 [value]="project.name"></app-editable-item>
             </div>
@@ -71,7 +71,7 @@
             <p class="mb-0 text-600">Cigol Software &copy;</p>
           </div>
           <div class="col-12 col-sm-auto text-center">
-            <p class="mb-0 text-600">v0.0.3</p>
+            <p class="mb-0 text-600">v0.1</p>
           </div>
         </div>
       </footer>

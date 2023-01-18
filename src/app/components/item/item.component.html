@@ -3,8 +3,9 @@
         <div class="d-flex align-items-center">
             <app-button *ngIf="message; else b" [properties]="error" class="pe-3"></app-button>
             <ng-template #b>
-                <app-button *ngIf="button" (click)="emitter.emit()" [properties]="button" class="pe-2"></app-button>
-                <div *ngIf="initials" (click)="emitter.emit()" class="avatar avatar-xl me-1">
+                <app-button *ngIf="primaryButton" (click)="primaryEmitter.emit()" [properties]="primaryButton"
+                    class="pe-2"></app-button>
+                <div *ngIf="initials" (click)="primaryEmitter.emit()" class="avatar avatar-xl me-1">
                     <div class="avatar-name rounded-circle bg-soft-light"><span
                             class="fs-0 text-primary">{{initials}}</span>
                     </div>
@@ -16,6 +17,8 @@
                     <div class="text-danger">{{message}}</div>
                 </div>
             </div>
+            <app-button *ngIf="secondaryButton" (click)="secondaryEmitter.emit()" [properties]="secondaryButton"
+                class="pe-2"></app-button>
         </div>
     </div>
 </div>

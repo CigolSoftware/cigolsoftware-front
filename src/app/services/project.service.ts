@@ -14,28 +14,34 @@ export class ProjectService {
     private pipe<R>(observable: Observable<Body<R>>): Observable<Body<R> | undefined> {
         Utilities.wait(true);
         return observable.pipe(catchError(e => {
-            Utilities.toast({ color: Color.DANGER, message: e.status === 400 ? e.error.message : Constants.NETWORK_ERROR });
+            Utilities.toast({ color: e.status === 400 ? Color.WARNING : Color.DANGER, message: e.status === 400 ? e.error.message : Constants.NETWORK_ERROR });
             return of(undefined);
         }), finalize(() => Utilities.wait(false)));
     }
 
-    public exists(project: Project): Observable<boolean | undefined> {
-        return this.pipe((this.http.post(environment.url + '/projects/exists', project) as Observable<Body<boolean>>)).pipe(map(b => b?.response));
+    public delete(project: Project): Observable<boolean | undefined> {
+        return this.pipe((this.http.delete(environment.url + '/projects/delete/' + project.id) as Observable<Body<boolean>>)).pipe(map(b => {
+            if (b && b.code === 0) {
+                Utilities.toast({ color: Color.SUCCESS, message: Constants.proyectModified(project, 'eliminado') });
+                return true;
+            }
+            return false;
+        }))
     }
 
+    public exists(project: Project): Observable<boolean | undefined> { return this.pipe((this.http.post(environment.url + '/projects/exists', project) as Observable<Body<boolean>>)).pipe(map(b => b?.response)) }
+    
     public filter(filter: Filter): Observable<Page | undefined> {
-        return this.pipe((this.http.post(environment.url + '/projects/filter', filter) as Observable<Body<Page>>)).pipe(map(b => b?.response));
+        filter.size = filter.size && filter.size > 0 ? filter.size : undefined;
+        return this.pipe((this.http.post(environment.url + '/projects/filter', filter) as Observable<Body<Page>>)).pipe(map(b => b?.response))
     }
 
     public save(project: Project): Observable<Project | undefined> {
         return this.pipe((this.http.post(environment.url + '/projects/save', project) as Observable<Body<Project>>)).pipe(map(b => {
             if (b && b.code === 0) {
-                Utilities.toast({ color: Color.SUCCESS, message: Constants.proyectSaved(b.response, !project.id) });
+                Utilities.toast({ color: Color.SUCCESS, message: Constants.proyectModified(b.response, project.id ? 'actualizado' : 'creado') });
                 return b.response;
-            } else {
-                if (b && b.code === 1) Utilities.toast({ color: Color.WARNING, message: Constants.PROJECT_EXIST });
-                return undefined;
-            }
+            } else return undefined;
         }));
     }
 

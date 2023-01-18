@@ -7,7 +7,8 @@ export enum Icon {
     DOWNLOAD = 'download',
     EXCLAMATION = 'exclamation',
     PEN = 'pen',
-    PLUS = 'plus'
+    PLUS = 'plus',
+    TRASH = 'trash'
 }
 
 export interface Filter { page: number; size?: number, value?: string; }

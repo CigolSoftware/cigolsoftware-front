@@ -15,7 +15,7 @@ export class UniqueProjectValidator implements AsyncValidator {
     constructor(private service: ProjectService) { }
 
     public validate(control: AbstractControl): Observable<ValidationErrors | null> {
-        return this.service.exists({ id: this.uniqueProject || 0, name: control.value }).pipe(map(r => {
+        return this.service.exists({ id: this.uniqueProject, name: control.value }).pipe(map(r => {
             if (r === undefined) return { uniqueProject: Constants.NETWORK_ERROR };
             return r ? { uniqueProject: Constants.PROJECT_EXIST } : null
         }));

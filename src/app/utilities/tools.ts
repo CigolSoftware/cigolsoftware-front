@@ -3,12 +3,12 @@ import { Project } from "./data";
 import { Toast } from "./dto";
 
 export class Constants {
-
     public static EMPTY_NAME = 'El nombre no puede estar vacío.';
     public static NETWORK_ERROR = 'No logramos conectarnos con el servidor, revisa tu conexión o intentalo más tarde.';
     public static PROJECT_EXIST = 'Ya existe un proyecto con este nombre.';
+    public static PROJECT_NULL: Project = { name: '' }
 
-    public static proyectSaved(project: Project, updated?: boolean) { return "Proyecto '" + project.name + "' " + (updated ? "creado" : "actualizado") + " correctamente" };
+    public static proyectModified(project: Project, modification: 'actualizado' | 'creado' | 'eliminado') { return "Proyecto '" + project.name + "' " + modification + " correctamente" };
 }
 
 export class Utilities {
