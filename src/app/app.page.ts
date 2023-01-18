@@ -1,80 +1,72 @@
 import { ButtonProperties } from './components/button/button.component';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Color, Icon, Toast } from './utilities/dto';
-import { Constants, Utilities } from './utilities/tools';
-import { NgForm, NgModel } from '@angular/forms';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Utilities } from './utilities/tools';
 import { Platform } from "@angular/cdk/platform";
+import { Project } from './utilities/data';
 import { ProjectService } from './services/project.service';
 
 @Component({ selector: 'app-root', templateUrl: './app.page.html' })
 export class AppPage {
 
-  @ViewChild("close")
-  private close: ElementRef | undefined;
+  @ViewChild("close") private close: ElementRef | undefined;
+  @ViewChild("loading") private loading: ElementRef | undefined;
+  @ViewChild("toast") private toast: ElementRef | undefined;
 
-  @ViewChild("loading")
-  private loading: ElementRef | undefined;
-
-  @ViewChild("toast")
-  private toast: ElementRef | undefined;
-
-  @ViewChild("iname")
-  set iname(name: ElementRef) { if (name) name.nativeElement.focus() }
-
-  public buttonCheck: ButtonProperties = { color: Color.SUCCESS, icon: Icon.CHECK };
-  public buttonDownload: ButtonProperties = { color: Color.PRIMARY, icon: Icon.DOWNLOAD };
-  public buttonExclamation: ButtonProperties = { color: Color.DANGER, icon: Icon.EXCLAMATION };
-  public buttonPlus: ButtonProperties = { color: Color.SUCCESS, icon: Icon.PLUS };
+  private page = 0;
 
   public default: any;
-  public form = false;
+  public download: ButtonProperties = { color: Color.PRIMARY, icon: Icon.DOWNLOAD };
+  public id?: number;
   public ios = false;
   public installer = false;
+  public plus: ButtonProperties = { color: Color.SUCCESS, icon: Icon.PLUS };
+  public projects: Project[] = []
+  public total: number = 0;
   public toastMessage?: Toast;
-  public submited = false;
+  public value?: string;
+
+  @HostListener('window:beforeinstallprompt', ['$event']) public preventDefault(e: any) {
+    e.preventDefault();
+    this.default = e;
+    this.installer = true;
+  }
 
   constructor(private platform: Platform, private service: ProjectService) {
+    if (this.platform.IOS && !(window.navigator as any)['standalone']) this.ios = true;
+    this.filter()
     Utilities.TOAST.subscribe(t => {
       this.toastMessage = t;
       this.toast?.nativeElement.click();
     });
     Utilities.WAIT.subscribe(w => (w ? this.loading : this.close)?.nativeElement.click());
-    if (this.platform.IOS && !(window.navigator as any)['standalone']) this.ios = true;
   }
 
-  public activeForm() {
-    this.form = true;
-    this.submited = false;
+  public search(value?: string) {
+    this.page = 0;
+    this.value = value;
+    this.filter();
   }
 
-  public create(project: NgForm) {
-    this.submited = true;
-    if (project.valid) {
-      this.service.save(project.value.name).subscribe(b => {
-        if (b && b.code === 0) {
-          Utilities.toast({ color: Color.SUCCESS, message: Constants.proyectSaved(b.response) });
-          this.form = false;
-        } else if (b && b.code === 1) Utilities.toast({ color: Color.WARNING, message: Constants.PROJECT_EXIST });
-      })
-    }
+  public filter(size?: number) {
+    this.id = undefined;
+    this.service.filter({ page: size ? 0 : this.page, size: size, value: this.value }).subscribe(p => {
+      if (p) {
+        if (size || this.page === 0) this.projects = p.projects;
+        else p.projects.forEach(p => { if (!this.projects.find(r => p.id === r.id)) this.projects.push(p) });
+        if (p.total !== this.projects.length && !size) this.page++;
+        this.total = p.total;
+      }
+    })
   }
 
-  public hasError(model: NgModel) {
-    if (this.submited && model.errors && model.errors['complete']) return Constants.EMPTY_NAME;
-    else if (model.errors && model.errors['uniqueProject']) return model.errors['uniqueProject'];
-    else return null;
-  }
+  public initials(name: string) { return name.split(' ').map(s => s[0]).reduce((a, b) => a + b).substring(0, 2) }
 
   public install() {
     this.default.prompt();
     this.default.userChoice.then((c: any) => { if (c.outcome === 'accepted') this.installer = false });
   }
 
-  @HostListener('window:beforeinstallprompt', ['$event'])
-  public preventDefault(e: any) {
-    e.preventDefault();
-    this.default = e;
-    this.installer = true;
-  }
+  public searchField(event: any) { this.search(event.target.value) }
 
 }

@@ -1,0 +1,12 @@
+<app-item *ngIf="!form; else new" (click)="activeForm()" [button]="button" [initials]="initials">
+  <a class="text-800 stretched-link fw-bold">{{placeholder || value}}</a>
+</app-item>
+<ng-template #new>
+  <app-item (emitter)="submit(item)" [button]="check" [message]="hasError(name)">
+    <form #item="ngForm" (ngSubmit)="submit(item)" autocomplete="off" class="pe-3 w-100">
+      <input [(ngModel)]="value" #ivalue #name="ngModel" [uniqueProject]="id"
+        class="form-control border-0 rounded-0 outline-none p-0" complete name="name"
+        placeholder="Nombre del proyecto..." />
+    </form>
+  </app-item>
+</ng-template>

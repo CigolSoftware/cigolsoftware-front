@@ -8,7 +8,7 @@ export class Constants {
     public static NETWORK_ERROR = 'No logramos conectarnos con el servidor, revisa tu conexión o intentalo más tarde.';
     public static PROJECT_EXIST = 'Ya existe un proyecto con este nombre.';
 
-    public static proyectSaved(project: Project) { return "Proyecto '" + project.name + "' creado correctamente" };
+    public static proyectSaved(project: Project, updated?: boolean) { return "Proyecto '" + project.name + "' " + (updated ? "creado" : "actualizado") + " correctamente" };
 }
 
 export class Utilities {
