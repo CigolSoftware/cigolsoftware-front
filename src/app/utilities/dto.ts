@@ -6,8 +6,9 @@ export enum Icon {
     CHECK = 'check',
     DOWNLOAD = 'download',
     EXCLAMATION = 'exclamation',
-    PEN = 'pen',
     PLUS = 'plus',
+    PROJECT_DIAGRAM = 'project-diagram',
+    SKIING = 'skiing',
     TRASH = 'trash'
 }
 

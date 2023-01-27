@@ -1,0 +1,38 @@
+<nav class="navbar navbar-light navbar-glass navbar-top navbar-expand">
+    <button #menu class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" data-bs-toggle="collapse"
+        data-bs-target="#navbarVerticalCollapse">
+        <span class="navbar-toggle-icon">
+            <span class="toggle-line"></span>
+        </span>
+    </button>
+    <h5 *ngIf="title; else search" class="mb-0">{{title}}</h5>
+    <ng-template #search>
+        <div [ngClass]="{ 'pe-2' : installer }" class="search-box w-100">
+            <form class="position-relative">
+                <input (keyup)="toSearch($event)" autocomplete="false" class="form-control search-input fuzzy-search"
+                    placeholder="Buscar..." />
+                <span class="fas fa-search search-box-icon"></span>
+            </form>
+            <div [ngClass]="{ 'pe-1' : installer }"
+                class="btn-close-falcon-container position-absolute end-0 top-50 translate-middle shadow-none"
+                data-bs-dismiss="search">
+                <button class="btn btn-link btn-close-falcon p-0" (click)="toSearch()"></button>
+            </div>
+        </div>
+    </ng-template>
+    <ul *ngIf="installer" class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+        <li class="nav-item">
+            <div>
+                <app-button *ngIf="ios; else android" [properties]="download" data-bs-toggle="dropdown"></app-button>
+                <div class="dropdown-menu dropdown-menu-end bg-soft-info me-3">
+                    <span class="dropdown-item-text fw-bold">Para instalar nuestra APP en tu iOS:</span>
+                    <span class="dropdown-item-text">1. Haz click en el botón compartir en Safari.</span>
+                    <span class="dropdown-item-text">2. Haz click en «Añadir a la pantalla de inicio».</span>
+                </div>
+            </div>
+            <ng-template #android>
+                <app-button (click)="install()" [properties]="download"></app-button>
+            </ng-template>
+        </li>
+    </ul>
+</nav>

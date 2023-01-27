@@ -13,9 +13,7 @@
             </ng-template>
             <div class="flex-1">
                 <ng-content></ng-content>
-                <div class="fs--2 fw-semi-bold">
-                    <div class="text-danger">{{message}}</div>
-                </div>
+                <div class="fs--2 fw-semi-bold pe-1 text-danger">{{message}}</div>
             </div>
             <app-button *ngIf="secondaryButton" (click)="secondaryEmitter.emit()" [properties]="secondaryButton"
                 class="pe-2"></app-button>

@@ -1,23 +1,19 @@
 import { map, Observable } from "rxjs";
-import { AbstractControl, AsyncValidator, NG_ASYNC_VALIDATORS, ValidationErrors } from "@angular/forms";
+import { AbstractControl, AsyncValidator, ValidationErrors } from "@angular/forms";
 import { Constants } from "../utilities/tools";
-import { Directive, Input } from "@angular/core";
-import { ProjectService } from "../services/project.service";
+import { Service } from "../services/service";
 
-@Directive({
-    providers: [{ multi: true, provide: NG_ASYNC_VALIDATORS, useExisting: UniqueProjectValidator }],
-    selector: '[uniqueProject]'
-})
-export class UniqueProjectValidator implements AsyncValidator {
+export class UniqueValidator<S extends Service<any>> implements AsyncValidator {
 
-    @Input() uniqueProject?: number;
+    protected id?: number;
+    protected exists: string = 'Mensaje sin asignar';
 
-    constructor(private service: ProjectService) { }
+    constructor(protected service: S) { }
 
     public validate(control: AbstractControl): Observable<ValidationErrors | null> {
-        return this.service.exists({ id: this.uniqueProject, name: control.value }).pipe(map(r => {
-            if (r === undefined) return { uniqueProject: Constants.NETWORK_ERROR };
-            return r ? { uniqueProject: Constants.PROJECT_EXIST } : null
+        return this.service.exists({ id: this.id, name: control.value }).pipe(map(r => {
+            if (r === undefined) return { unique: Constants.NETWORK_ERROR };
+            return r ? { unique: this.exists } : null;
         }));
     }
 }

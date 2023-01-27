@@ -1,0 +1,50 @@
+<app-header title="Nueva habilidad"></app-header>
+<div class="row g-0">
+    <div class="col-xxl-12 px-xxl-2 mb-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <form #s="ngForm" (ngSubmit)="submited = true"
+                    [greater]="[{mayor: 'normal', minor: 'easy', minorName:'Fácil'}, {mayor: 'hard', minor: 'normal', minorName:'Normal'}]">
+                    <div class="row gx-2">
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input [(ngModel)]="skill.name"
+                                [ngClass]="{'is-valid' : submited && !hasError(name), 'is-invalid' : hasError(name)}"
+                                [skillUnique]="0" #name="ngModel" class="form-control invalid" complete name="name"
+                                placeholder="Nombre" />
+                            <div class="fs--2 fw-semi-bold p-1 text-danger">{{hasError(name)}}</div>
+                        </div>
+                    </div>
+                    <div class="row gx-2">
+                        <h6 class="fs-0">Tiempos</h6>
+                        <hr />
+                        <div class="col-sm-4 mb-3">
+                            <label class="form-label">Fácil</label>
+                            <input [(ngModel)]="skill.easy"
+                                [ngClass]="{'is-valid' : submited && !hasError(easy), 'is-invalid' : hasError(easy)}"
+                                #easy="ngModel" class="form-control" name="easy" placeholder="Facil" positive
+                                type="number" />
+                            <div class="fs--2 fw-semi-bold p-1 text-danger">{{hasError(easy)}}</div>
+                        </div>
+                        <div class="col-sm-4 mb-3">
+                            <label class="form-label">Normal</label>
+                            <input [(ngModel)]="skill.normal"
+                                [ngClass]="{'is-valid' : submited && !hasError(normal), 'is-invalid' : hasError(normal)}"
+                                #normal="ngModel" class="form-control" name="normal" placeholder="Normal"
+                                type="number" />
+                            <div class="fs--2 fw-semi-bold p-1 text-danger">{{hasError(normal)}}</div>
+                        </div>
+                        <div class="col-sm-4 mb-3">
+                            <label class="form-label">Difícil</label>
+                            <input [(ngModel)]="skill.hard"
+                                [ngClass]="{'is-valid' : submited && !hasError(hard), 'is-invalid' : hasError(hard)}"
+                                #hard="ngModel" class="form-control" name="hard" placeholder="Difícil" type="number" />
+                            <div class="fs--2 fw-semi-bold p-1 text-danger">{{hasError(hard)}}</div>
+                        </div>
+                    </div>
+                    <button hidden type="submit"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

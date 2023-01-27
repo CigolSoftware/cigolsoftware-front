@@ -1,3 +1,1 @@
-export const environment = {
-    url: 'https://cigolsoftwareserver.com'
-};
+export const environment = { url: 'https://cigolsoftwareserver.com/' };

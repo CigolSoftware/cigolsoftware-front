@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
-const routes: Routes = [];
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  imports: [RouterModule.forRoot([
+    { loadChildren: () => import('src/app/pages/project/project.module').then(m => m.ProjectModule), path: 'projects' },
+    { loadChildren: () => import('src/app/pages/skill/skill.module').then(m => m.SkillModule), path: 'skills' },
+    { path: '', pathMatch: 'full', redirectTo: '/skills/list' }
+  ])]
 })
 export class AppRoutingModule { }
