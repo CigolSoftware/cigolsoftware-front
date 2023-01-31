@@ -13,6 +13,7 @@ export class GreaterValidator implements Validator {
         this.greater.forEach(g => {
             let mayor = control.get(g.mayor);
             if (mayor?.value <= control.get(g.minor)?.value) mayor?.setErrors({ greater: Constants.GREATER.replace('{0}', g.minorName) });
+            else mayor?.updateValueAndValidity({ onlySelf: true });
         })
         return null;
     }

@@ -21,7 +21,9 @@ export class EditableItemComponent extends Form {
     public check: ButtonProperties = { color: Color.SUCCESS, icon: Icon.CHECK };
     public delete: ButtonProperties = { color: Color.DANGER, icon: Icon.TRASH };
 
-    constructor(private service: ProjectService) { super() }
+    constructor(protected override service: ProjectService) { super(service) }
+
+    public override submit(form: NgForm) { super.submit(form, this.project?.id) }
 
     public activeForm() {
         this.form = true;
@@ -32,16 +34,10 @@ export class EditableItemComponent extends Form {
         this.service.delete(this.project || Constants.PROJECT_NULL).subscribe(b => { if (b) this.emitter.emit() });
     }
 
-    public submit(item: NgForm) {
-        this.submited = true;
-        if (item.valid) {
-            if (item.dirty) this.service.save({ id: this.project?.id, ...item.value }).subscribe(b => {
-                if (b) {
-                    this.emitter.emit();
-                    this.value = undefined;
-                }
-            });
-            this.form = false;
-        }
+    public postSubmit(): void {
+        this.emitter.emit();
+        this.value = undefined;
+        this.form = false;
     }
+
 }

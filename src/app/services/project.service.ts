@@ -14,8 +14,10 @@ export class ProjectService extends Service<Project> {
 
     constructor(protected override http: HttpClient) { super(http) }
 
+    public override save(project: Project): Observable<Project | undefined> { return super.save(project) }
+    
     public delete(project: Project): Observable<boolean | undefined> {
-        return this.pipe((this.http.delete( this.url + 'delete/' + project.id) as Observable<Body<boolean>>)).pipe(map(b => {
+        return this.pipe((this.http.delete(this.url + 'delete/' + project.id) as Observable<Body<boolean>>)).pipe(map(b => {
             if (b && b.code === 0) {
                 Utilities.toast({ color: Color.SUCCESS, message: Constants.proyectModified(project, 'eliminado') });
                 return true;
@@ -29,13 +31,5 @@ export class ProjectService extends Service<Project> {
         return this.pipe((this.http.post(this.url + 'filter', filter) as Observable<Body<Page>>)).pipe(map(b => b?.response))
     }
 
-    public save(project: Project): Observable<Project | undefined> {
-        return this.pipe((this.http.post(this.url + 'save', project) as Observable<Body<Project>>)).pipe(map(b => {
-            if (b && b.code === 0) {
-                Utilities.toast({ color: Color.SUCCESS, message: Constants.proyectModified(b.response, project.id ? 'actualizado' : 'creado') });
-                return b.response;
-            } else return undefined;
-        }));
-    }
-
+    protected saveMessage(project: Project, id?: number): string { return Constants.proyectModified(project, id ? 'actualizado' : 'creado') }
 }

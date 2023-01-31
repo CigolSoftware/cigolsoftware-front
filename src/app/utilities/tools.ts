@@ -1,5 +1,6 @@
-import { NgModel } from "@angular/forms";
-import { Project } from "./data";
+import { NgForm, NgModel } from "@angular/forms";
+import { Project, Skill } from "./data";
+import { Service } from "../services/service";
 import { Subject, timer } from "rxjs";
 import { Toast } from "./dto";
 
@@ -13,6 +14,7 @@ export class Constants {
     public static PROJECT_NULL: Project = { name: '' }
 
     public static proyectModified(project: Project, modification: 'actualizado' | 'creado' | 'eliminado') { return "Proyecto '" + project.name + "' " + modification + " correctamente" };
+    public static skillModified(skill: Skill, modification: 'actualizada' | 'creada' | 'eliminada') { return "Habilidad '" + skill.name + "' " + modification + " correctamente" };
 }
 
 export class Utilities {
@@ -59,7 +61,7 @@ export class Utilities {
 
 }
 
-export class Form {
+export abstract class Form {
     protected static readonly ERRORS = [
         { name: 'complete', submited: true },
         { name: 'greater', submited: true },
@@ -68,8 +70,17 @@ export class Form {
     ];
     public submited?: boolean;
 
+    constructor(protected service: Service<any>) { }
+
     public hasError(model: NgModel) {
         if (!model.errors) return null;
         for (let error of Form.ERRORS) if (model.errors && model.errors[error.name]) return error.submited && !this.submited ? null : model.errors[error.name];
+    }
+
+    public abstract postSubmit(): void;
+
+    public submit(form: NgForm, id?: number) {
+        this.submited = true;
+        if (form.valid && form.dirty) this.service.save({ id: id, ...form.value }).subscribe(b => { if (b) this.postSubmit() });
     }
 }

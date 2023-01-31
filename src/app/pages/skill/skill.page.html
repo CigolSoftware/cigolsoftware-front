@@ -3,7 +3,7 @@
     <div class="col-xxl-12 px-xxl-2 mb-4">
         <div class="card mb-3">
             <div class="card-body">
-                <form #s="ngForm" (ngSubmit)="submited = true"
+                <form #s="ngForm" (ngSubmit)="submit(s)"
                     [greater]="[{mayor: 'normal', minor: 'easy', minorName:'Fácil'}, {mayor: 'hard', minor: 'normal', minorName:'Normal'}]">
                     <div class="row gx-2">
                         <div class="col-12 mb-3">
@@ -42,7 +42,7 @@
                             <div class="fs--2 fw-semi-bold p-1 text-danger">{{hasError(hard)}}</div>
                         </div>
                     </div>
-                    <button hidden type="submit"></button>
+                    <button class="btn btn-outline-success">Guardar</button>
                 </form>
             </div>
         </div>

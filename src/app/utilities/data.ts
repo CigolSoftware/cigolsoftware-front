@@ -1,3 +1,4 @@
 export interface Body<R> { code: number; message: string; response: R; }
-export interface Project { id?: number, name: string }
-export interface Skill { id?: number, easy: number, hard: number, name: string, normal: number }
+export interface Dto { id?: number, name: string }
+export interface Project extends Dto { }
+export interface Skill extends Dto{ easy: number, hard: number, normal: number }
